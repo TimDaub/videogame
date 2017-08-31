@@ -18,6 +18,7 @@ const babel    = require('rollup-plugin-babel')
 const commonjs = require('rollup-plugin-commonjs')
 const resolve  = require('rollup-plugin-node-resolve')
 const uglify   = require('rollup-plugin-uglify')
+const minify   = require('uglify-es')
 
 // error handler
 
@@ -71,7 +72,7 @@ const read = {
     resolve({ jsnext: true, main: true }),
     commonjs(),
     babel({ exclude: 'node_modules/**' }),
-    uglify()
+    uglify({}, minify.minify)
   ]
 }
 

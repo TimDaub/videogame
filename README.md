@@ -1,6 +1,6 @@
 # VIDEOGAME
 
-A side scroller that I wrote from scatch.
+A side scroller I wrote from scratch.
 
 ### Prerequisites
 
@@ -9,8 +9,10 @@ A side scroller that I wrote from scatch.
 ### Installation
 
 ```bash
-npm i
-gulp
+$ npm i
+$ npm run dev
 ```
 
+### License
 
+MIT

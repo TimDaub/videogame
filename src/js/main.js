@@ -8,6 +8,7 @@ import Map from './models/map.js'
 import Grid from './models/grid.js'
 import World from './models/world.js'
 import EditorMenu from './models/editor_menu.js'
+import "../sass/style.scss";
 
 
 const main = () => {

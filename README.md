@@ -1,8 +1,10 @@
 # VIDEOGAME
 
-A side scroller that I wrote from scatch. More information following when I
-have time.
+A side scroller that I wrote from scatch.
 
+### Prerequisites
+
+- Have rollup installed globally
 
 ### Installation
 
@@ -11,5 +13,4 @@ npm i
 gulp
 ```
 
-Browser window should open at localhost:3000.
 

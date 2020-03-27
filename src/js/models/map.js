@@ -1,3 +1,4 @@
+//@format
 import { assetsLoaded } from '../asset_manager.js'
 import { mapTileFactory } from '../map_manager.js'
 

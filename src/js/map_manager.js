@@ -1,3 +1,4 @@
+//@format
 import { getAsset } from './asset_manager.js'
 import MapTile from './models/map_tile.js'
 

@@ -1,3 +1,4 @@
+//@format
 var assetsFolder = window.location.href + 'images/'
 var assets = {}
 var files = [

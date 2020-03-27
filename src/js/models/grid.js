@@ -1,3 +1,4 @@
+//@format
 export default class Grid {
     constructor(w, h) {
         this.w = w

@@ -1,3 +1,4 @@
+//@format
 import { getAsset, assetsLoaded } from '../asset_manager.js'
 import { getScreenParams } from '../utils.js'
 

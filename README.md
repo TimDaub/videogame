@@ -1,6 +1,7 @@
 # VIDEOGAME
 
 A side scroller I wrote from scratch.
+[Demo](https://timdaub.github.io/videogame/).
 
 ### Prerequisites
 

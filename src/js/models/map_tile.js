@@ -57,9 +57,10 @@ export default class MapTile {
         this.w,
         this.h
       );
-      if (window.globals.debug) {
+      if (window.globals.debug.on) {
+        const lineWidth = 1;
         window.globals.ctx.globalCompositeOperation = "source-over";
-        window.globals.ctx.lineWidth = 2;
+        window.globals.ctx.lineWidth = window.globals.debug.lineWidth;
         window.globals.ctx.strokeStyle = "#FF0000";
         window.globals.ctx.strokeRect(
           this.x - mapOffset,

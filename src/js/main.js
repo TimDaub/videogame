@@ -17,7 +17,10 @@ const main = () => {
     gravity: 6,
     map: null,
     world: null,
-    debug: false
+    debug: {
+      on: true,
+      lineWidth: 1
+    }
   };
 
   function init(currentTime) {

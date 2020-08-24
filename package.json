@@ -38,8 +38,8 @@
     "side",
     "scroller"
   ],
-  "author": "= <=> (http://hondrt.de/)",
-  "license": "MIT",
+  "author": "Tim Daubenschütz <tim@daubenschuetz.de>",
+  "license": "GPL-3.0-only",
   "bugs": {
     "url": "https://github.com/TimDaub/videogame/issues"
   },

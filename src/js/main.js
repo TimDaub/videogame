@@ -18,7 +18,7 @@ const main = () => {
     map: null,
     world: null,
     debug: {
-      on: true,
+      on: false,
       lineWidth: 1
     }
   };
@@ -37,10 +37,18 @@ const main = () => {
       true
     );
     window.globals.world = new World("background");
-    window.globals.player = new Player(67, 61, 430, 520, 0, 0, false, [
-      "walkright",
-      "walkleft"
-    ]);
+    window.globals.player = new Player(
+      73,
+      113,
+      430,
+      220,
+      0,
+      0,
+      146,
+      226,
+      false,
+      ["run_left", "run_right", "idle"]
+    );
   }
 
   function update(dt) {

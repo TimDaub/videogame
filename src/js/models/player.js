@@ -1,8 +1,11 @@
 //@format
 import { getAsset, assetsLoaded } from "../asset_manager.js";
 
+const tickSpeed = 1;
+const animationLength = 20;
+
 export default class Player {
-  constructor(w, h, x, y, vx, vy, respawn, assets) {
+  constructor(w, h, x, y, vx, vy, imgW, imgH, respawn, assets) {
     this.spawnX = x;
     this.spawnY = y;
     this.respawn = respawn;
@@ -10,6 +13,8 @@ export default class Player {
 
     this.w = w;
     this.h = h;
+    this.imgW = imgW;
+    this.imgH = imgH;
 
     this.x = x;
     this.y = y;
@@ -20,13 +25,13 @@ export default class Player {
     this.weight = 0.8;
 
     this.ticks = 0;
-    this.ticksPerFrame = 3;
+    this.ticksPerFrame = tickSpeed;
     this.animation = 0;
 
     assets.forEach(assetName => {
       this[assetName] = getAsset(assetName);
     });
-    this.walkAsset = this.walkright;
+    this.walkAsset = this.run_right;
     this.walkSpeed = 5;
 
     this.initControls();
@@ -168,8 +173,7 @@ export default class Player {
     if (this.ticks > this.ticksPerFrame) {
       this.ticks = 0;
       this.animation += 1;
-      // TODO: Replace 4 with variable for animation end
-      if (this.animation === 4) {
+      if (this.animation === animationLength) {
         this.animation = 0;
       }
     }
@@ -177,7 +181,7 @@ export default class Player {
     if (this.vx === 0) {
       this.ticksPerFrame = 1 / 0; // lol I'm such a haxor
     } else {
-      this.ticksPerFrame = 3;
+      this.ticksPerFrame = tickSpeed;
     }
   }
 
@@ -187,19 +191,18 @@ export default class Player {
       // TODO: This is buggy when the player walks into a prop, coming
       //       from the right
       if (this.vx > 0) {
-        this.walkAsset = this.walkright;
+        this.walkAsset = this.run_right;
       } else if (this.vx < 0) {
-        this.walkAsset = this.walkleft;
+        this.walkAsset = this.run_left;
       }
 
       window.globals.ctx.beginPath();
       window.globals.ctx.drawImage(
         this.walkAsset.sprite,
-        // +3 is just to correct manually a bit, maybe remove later
-        this.w * this.animation,
+        this.imgW * this.animation,
         0,
-        this.w,
-        this.h,
+        this.imgW,
+        this.imgH,
         window.globals.canvas.width / 2 - this.w / 2,
         this.y,
         this.w,

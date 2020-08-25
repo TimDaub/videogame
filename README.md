@@ -14,6 +14,12 @@ $ npm i
 $ npm run dev
 ```
 
-### License
+## Copyright notice
 
-MIT
+© 2020, Tim Daubenschütz. All rights reserved. 
+
+[Player sprites](https://erikari.itch.io/fluffy-animals) from
+[erikari](https://erikari.itch.io), with special permission to use in Open
+Source project on GitHub.
+
+

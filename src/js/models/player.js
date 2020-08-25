@@ -1,11 +1,10 @@
 //@format
-import { getAsset, assetsLoaded } from "../asset_manager.js";
-
-const tickSpeed = 1;
-const animationLength = 20;
+const defaultAssetName = "playerIdleRight";
+const playerSpeed = 5;
+let prevVx = 1;
 
 export default class Player {
-  constructor(w, h, x, y, vx, vy, imgW, imgH, respawn, assets) {
+  constructor(w, h, x, y, vx, vy, respawn, assets) {
     this.spawnX = x;
     this.spawnY = y;
     this.respawn = respawn;
@@ -13,8 +12,6 @@ export default class Player {
 
     this.w = w;
     this.h = h;
-    this.imgW = imgW;
-    this.imgH = imgH;
 
     this.x = x;
     this.y = y;
@@ -24,15 +21,12 @@ export default class Player {
 
     this.weight = 0.8;
 
-    this.ticks = 0;
-    this.ticksPerFrame = tickSpeed;
-    this.animation = 0;
+    this.assets = assets;
+    this.currentAsset = this.assets[defaultAssetName];
 
-    assets.forEach(assetName => {
-      this[assetName] = getAsset(assetName);
-    });
-    this.walkAsset = this.run_right;
-    this.walkSpeed = 5;
+    this.ticksPerFrame = this.currentAsset.tickSpeed;
+    this.currentTick = 0;
+    this.ticks = 0;
 
     this.initControls();
   }
@@ -61,10 +55,10 @@ export default class Player {
         this.jump(-14);
       }
       if (e.keyCode === 37 || e.keyCode === 65) {
-        left.push(walk(-1 * this.walkSpeed));
+        left.push(walk(-1 * playerSpeed));
       }
       if (e.keyCode === 39 || e.keyCode === 68) {
-        right.push(walk(this.walkSpeed));
+        right.push(walk(playerSpeed));
       }
     };
 
@@ -103,8 +97,6 @@ export default class Player {
   }
 
   update(dt) {
-    // NOTE: collision to the right is not correct yet
-    // NOTE 07.03: I don't know anymore what was meant by that :/
     this.updateAnimation();
     let tiles = window.globals.map.tiles;
 
@@ -128,7 +120,6 @@ export default class Player {
       if (collisions) {
         // Retrieve the value that is closest to zero
         let side = Object.keys(collisions)
-          // TODO: Comply with 80 char limit
           .sort(
             (a, b) =>
               Math.abs(collisions[a]) > Math.abs(collisions[b]) ? 1 : -1
@@ -137,7 +128,6 @@ export default class Player {
 
         // and depending on the outcome, set the players movement to
         // zero
-        // TODO: Comply with 80 char limit
         let { left, right, bottom, top } = collisions;
         if (side === "bottom" && left > 30 && right > 30) {
           // player standing on prop
@@ -172,41 +162,47 @@ export default class Player {
     this.ticks += 1;
     if (this.ticks > this.ticksPerFrame) {
       this.ticks = 0;
-      this.animation += 1;
-      if (this.animation === animationLength) {
-        this.animation = 0;
+      this.currentTick += 1;
+      if (this.currentTick === this.currentAsset.numOfFrames) {
+        this.currentTick = 0;
       }
     }
 
-    if (this.vx === 0) {
-      this.ticksPerFrame = 1 / 0; // lol I'm such a haxor
-    } else {
-      this.ticksPerFrame = tickSpeed;
-    }
+    this.ticksPerFrame = this.currentAsset.tickSpeed;
   }
 
   render() {
-    if (assetsLoaded() && this.health) {
+    if (this.health) {
       // NOTE: We determine direction before we draw
       // TODO: This is buggy when the player walks into a prop, coming
       //       from the right
       if (this.vx > 0) {
-        this.walkAsset = this.run_right;
+        this.currentAsset = this.assets.playerRunRight;
       } else if (this.vx < 0) {
-        this.walkAsset = this.run_left;
+        this.currentAsset = this.assets.playerRunLeft;
+      } else if (this.vx === 0 && prevVx > 0) {
+        this.currentAsset = this.assets.playerIdleRight;
+      } else if (this.vx === 0 && prevVx < 0) {
+        this.currentAsset = this.assets.playerIdleLeft;
+      } else if (this.vx === 0 && prevVx === 0) {
+        // noop, use currentAsset
+      } else {
+        this.currentAsset = this.assets[defaultAssetName];
       }
+
+      prevVx = this.vx;
 
       window.globals.ctx.beginPath();
       window.globals.ctx.drawImage(
-        this.walkAsset.sprite,
-        this.imgW * this.animation,
+        this.currentAsset.sprite,
+        this.currentAsset.sWidth * this.currentTick,
         0,
-        this.imgW,
-        this.imgH,
+        this.currentAsset.sWidth,
+        this.currentAsset.sHeight,
         window.globals.canvas.width / 2 - this.w / 2,
-        this.y,
-        this.w,
-        this.h
+        this.y + this.currentAsset.dy,
+        this.currentAsset.sWidth / 2,
+        this.currentAsset.sHeight / 2
       );
       if (window.globals.debug.on) {
         const lineWidth = 1;

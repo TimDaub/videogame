@@ -1,6 +1,4 @@
 // @format
-import { assetsLoaded } from "../asset_manager.js";
-
 export default class MapTile {
   constructor(asset, sx, sy, sw, sh, x, y, w, h, blocking) {
     this.asset = asset;
@@ -41,34 +39,27 @@ export default class MapTile {
       // TODO: Generalize this, its super ugly
       mapOffset = 0;
     }
-    if (assetsLoaded()) {
-      window.globals.ctx.beginPath();
-      // NOTE: If this is to heavy for you, read the docs:
-      // https://developer.mozilla.org/de/docs/Web/API/
-      // CanvasRenderingContext2D/drawImage
-      window.globals.ctx.drawImage(
-        this.asset.sprite,
-        this.sx,
-        this.sy,
-        this.sw,
-        this.sh,
-        this.x - mapOffset,
-        this.y,
-        this.w,
-        this.h
-      );
-      if (window.globals.debug.on) {
-        const lineWidth = 1;
-        window.globals.ctx.globalCompositeOperation = "source-over";
-        window.globals.ctx.lineWidth = window.globals.debug.lineWidth;
-        window.globals.ctx.strokeStyle = "#FF0000";
-        window.globals.ctx.strokeRect(
-          this.x - mapOffset,
-          this.y,
-          this.w,
-          this.h
-        );
-      }
+    window.globals.ctx.beginPath();
+    // NOTE: If this is to heavy for you, read the docs:
+    // https://developer.mozilla.org/de/docs/Web/API/
+    // CanvasRenderingContext2D/drawImage
+    window.globals.ctx.drawImage(
+      this.asset.sprite,
+      this.sx,
+      this.sy,
+      this.sw,
+      this.sh,
+      this.x - mapOffset,
+      this.y,
+      this.w,
+      this.h
+    );
+    if (window.globals.debug.on) {
+      const lineWidth = 1;
+      window.globals.ctx.globalCompositeOperation = "source-over";
+      window.globals.ctx.lineWidth = window.globals.debug.lineWidth;
+      window.globals.ctx.strokeStyle = "#FF0000";
+      window.globals.ctx.strokeRect(this.x - mapOffset, this.y, this.w, this.h);
       window.globals.ctx.closePath();
     }
   }

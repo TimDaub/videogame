@@ -1,47 +1,68 @@
 //@format
-var assetsFolder = window.location.href + "images/";
-var assets = {};
-var files = [
-  "background.png",
-  "run_left.png",
-  "run_right.png",
-  "idle.png",
-  "map.png"
-];
+// NOTES: Asset property names are according to `drawImage` method with full
+// parameters:
+// https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/drawImage
+// `void ctx.drawImage(image, sx, sy, sWidth, sHeight, dx, dy, dWidth,
+// dHeight);`
+var assets = {
+  background: { path: "images/background.png" },
+  playerRunLeft: {
+    path: "images/run_left.png",
+    numOfFrames: 20,
+    sx: 0,
+    sWidth: 146,
+    sHeight: 226,
+    tickSpeed: 1,
+    dy: 5
+  },
+  playerRunRight: {
+    path: "images/run_right.png",
+    numOfFrames: 20,
+    sx: 0,
+    sWidth: 146,
+    sHeight: 226,
+    tickSpeed: 1,
+    dy: 5
+  },
+  playerIdleRight: {
+    path: "images/idle_right.png",
+    numOfFrames: 20,
+    sx: 0,
+    sWidth: 100,
+    sHeight: 227,
+    tickSpeed: 1,
+    dy: 5
+  },
+  playerIdleLeft: {
+    path: "images/idle_left.png",
+    numOfFrames: 20,
+    sx: 0,
+    sWidth: 100,
+    sHeight: 227,
+    tickSpeed: 1,
+    dy: 5
+  },
+  map: { path: "images/map.png" }
+};
 
-export function assetsLoaded() {
-  return Object.keys(assets).reduce(function(prev, name) {
-    return prev && assets[name].loaded;
-  }, true);
-}
-
-export function getAsset(name) {
-  var asset = assets[name];
-  return asset;
-}
-
-export function initializeAssets() {
-  files.forEach(function(fileName) {
-    var sanitizedName = fileName.split(".")[0];
-    assets[sanitizedName] = {
-      sprite: new Image(),
-      loaded: false,
-      file: fileName
-    };
+async function loadAssets() {
+  const loadingAssets = [];
+  Object.keys(assets).forEach(key => {
+    var asset = assets[key];
+    asset.sprite = new Image();
+    asset.sprite.src = window.location.href + asset.path;
+    loadingAssets.push(
+      new Promise((resolve, reject) => (asset.sprite.onload = resolve))
+    );
+    assets[key] = asset;
   });
-  loadAssets();
+
+  // NOTE: Resolves only once all assets have successfully been loaded.
+  await Promise.all(loadingAssets);
 }
 
-function loadAsset(asset) {
-  asset.sprite.src = assetsFolder + asset.file;
-  asset.sprite.onload = function() {
-    asset.loaded = true;
-  };
-  return asset;
+function getAsset(name) {
+  return assets[name];
 }
 
-export function loadAssets() {
-  Object.keys(assets).forEach(function(spriteName) {
-    loadAsset(assets[spriteName]);
-  });
-}
+export { loadAssets, getAsset };

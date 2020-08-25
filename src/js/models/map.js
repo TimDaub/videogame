@@ -1,5 +1,4 @@
 //@format
-import { assetsLoaded } from "../asset_manager.js";
 import { mapTileFactory } from "../map_manager.js";
 
 export default class Map {
@@ -36,8 +35,6 @@ export default class Map {
   }
 
   render() {
-    if (assetsLoaded()) {
-      this.tiles.forEach(tile => tile.render(this.mapOffset()));
-    }
+    this.tiles.forEach(tile => tile.render(this.mapOffset()));
   }
 }

@@ -1,5 +1,5 @@
 //@format
-import { getAsset, assetsLoaded, initializeAssets } from "./asset_manager.js";
+import { loadAssets, getAsset } from "./asset_manager.js";
 import { getScreenParams } from "./utils.js";
 
 import Player from "./models/player.js";
@@ -9,7 +9,7 @@ import World from "./models/world.js";
 import EditorMenu from "./models/editor_menu.js";
 import "../sass/style.scss";
 
-const main = () => {
+const main = async () => {
   window.globals = {
     canvas: null,
     ctx: null,
@@ -23,7 +23,8 @@ const main = () => {
     }
   };
 
-  function init(currentTime) {
+  async function init(currentTime) {
+    await loadAssets();
     window.globals.canvas = document.querySelector("canvas");
     window.globals.ctx = window.globals.canvas.getContext("2d");
     window.globals.map = new Map();
@@ -36,19 +37,13 @@ const main = () => {
       window.globals.map,
       true
     );
-    window.globals.world = new World("background");
-    window.globals.player = new Player(
-      73,
-      113,
-      430,
-      220,
-      0,
-      0,
-      146,
-      226,
-      false,
-      ["run_left", "run_right", "idle"]
-    );
+    window.globals.world = new World(getAsset("background"));
+    window.globals.player = new Player(73, 113, 430, 220, 0, 0, false, {
+      playerRunLeft: getAsset("playerRunLeft"),
+      playerRunRight: getAsset("playerRunRight"),
+      playerIdleRight: getAsset("playerIdleRight"),
+      playerIdleLeft: getAsset("playerIdleLeft")
+    });
   }
 
   function update(dt) {
@@ -88,10 +83,8 @@ const main = () => {
     requestAnimationFrame(frame);
   }
 
+  await init();
   requestAnimationFrame(frame);
-
-  initializeAssets();
-  init();
 };
 
 document.addEventListener("DOMContentLoaded", main);
